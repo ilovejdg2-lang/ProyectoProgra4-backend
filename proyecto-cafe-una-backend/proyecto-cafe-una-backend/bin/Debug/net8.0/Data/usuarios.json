@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "nombre": "MDM",
+    "correo": "maria.diaz.ruiz@est.una.ac.cr",
+    "passwordHash": "Mary2506",
+    "estado": "activo",
+    "roles": [
+      "SuperAdmin"
+    ]
+  },
+  {
+    "id": 2,
+    "nombre": "Sam",
+    "correo": "samcocho@gmail.com",
+    "passwordHash": "nose1234",
+    "estado": "activo",
+    "roles": [
+      "Admin"
+    ]
+  },
+  {
+    "id": 3,
+    "nombre": "Fati",
+    "correo": "fatima.carrillo@est.una.ac.cr",
+    "passwordHash": "F1t32105",
+    "estado": "activo",
+    "roles": [
+      "SuperAdmin"
+    ]
+  }
+]

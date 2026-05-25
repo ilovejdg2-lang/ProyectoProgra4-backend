@@ -1,0 +1,17 @@
+{
+  "hero": {
+    "title": "Hero Test",
+    "subtitle": "Sub",
+    "buttonText": "Btn",
+    "backgroundImage": ""
+  },
+  "mission": {
+    "title": "Mision",
+    "description": "Fomentar el desarrollo sostenible del cafe con impacto social."
+  },
+  "vision": {
+    "title": "Vision",
+    "description": "Ser referencia en cafe sostenible y colaboracion comunitaria."
+  },
+  "gallery": []
+}
