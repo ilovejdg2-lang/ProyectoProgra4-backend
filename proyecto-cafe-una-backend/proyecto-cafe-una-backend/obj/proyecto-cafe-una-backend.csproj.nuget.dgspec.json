@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\yeiss_5ryb25q\\Desktop\\ProyectoProgra-Github\\ProyectoProgra4-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend.csproj": {}
+    "C:\\Users\\campo\\OneDrive\\Documentos\\Progra4Proyecto\\ProyectoProgra4-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\yeiss_5ryb25q\\Desktop\\ProyectoProgra-Github\\ProyectoProgra4-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend.csproj": {
+    "C:\\Users\\campo\\OneDrive\\Documentos\\Progra4Proyecto\\ProyectoProgra4-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\yeiss_5ryb25q\\Desktop\\ProyectoProgra-Github\\ProyectoProgra4-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend.csproj",
+        "projectUniqueName": "C:\\Users\\campo\\OneDrive\\Documentos\\Progra4Proyecto\\ProyectoProgra4-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend.csproj",
         "projectName": "proyecto-cafe-una-backend",
-        "projectPath": "C:\\Users\\yeiss_5ryb25q\\Desktop\\ProyectoProgra-Github\\ProyectoProgra4-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend.csproj",
-        "packagesPath": "C:\\Users\\yeiss_5ryb25q\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\yeiss_5ryb25q\\Desktop\\ProyectoProgra-Github\\ProyectoProgra4-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend\\obj\\",
+        "projectPath": "C:\\Users\\campo\\OneDrive\\Documentos\\Progra4Proyecto\\ProyectoProgra4-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend.csproj",
+        "packagesPath": "C:\\Users\\campo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\campo\\OneDrive\\Documentos\\Progra4Proyecto\\ProyectoProgra4-backend\\proyecto-cafe-una-backend\\proyecto-cafe-una-backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\yeiss_5ryb25q\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\campo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,7 +44,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -74,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

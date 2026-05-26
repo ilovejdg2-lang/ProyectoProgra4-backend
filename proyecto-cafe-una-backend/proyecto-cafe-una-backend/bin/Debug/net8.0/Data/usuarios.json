@@ -16,7 +16,10 @@
     "passwordHash": "nose1234",
     "estado": "activo",
     "roles": [
-      "Usuario"
+      "SuperAdmin",
+      "Usuario",
+      "Admin",
+      "Cliente"
     ]
   },
   {

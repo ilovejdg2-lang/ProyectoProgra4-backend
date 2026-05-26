@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("proyecto-cafe-una-backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8775882d1faba9c2d24c2da83b992b24d583951e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ac510707d3d54a93779bc4d15671ba36ccbac51f")]
 [assembly: System.Reflection.AssemblyProductAttribute("proyecto-cafe-una-backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("proyecto-cafe-una-backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
