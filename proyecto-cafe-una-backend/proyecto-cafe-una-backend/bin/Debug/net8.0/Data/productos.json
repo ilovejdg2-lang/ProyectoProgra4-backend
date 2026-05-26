@@ -7,7 +7,7 @@
     "imagen": "https://images.unsplash.com/photo-1509042239860-f550ce710b93",
     "precioNormal": 4500,
     "precioConIva": 5085,
-    "stock": 35,
+    "stock": 33,
     "estado": "Habilitado"
   },
   {
@@ -16,9 +16,9 @@
     "descripcion": "Caf\u00E9 molido de tueste medio con sabor balanceado, acidez suave y aroma dulce.",
     "peso": "500g",
     "imagen": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085",
-    "precioNormal": 4200,
-    "precioConIva": 4746,
-    "stock": 40,
+    "precioNormal": 4205,
+    "precioConIva": 4752,
+    "stock": 7,
     "estado": "Habilitado"
   },
   {
@@ -29,7 +29,7 @@
     "imagen": "https://images.unsplash.com/photo-1511920170033-f8396924c348",
     "precioNormal": 5200,
     "precioConIva": 5876,
-    "stock": 28,
+    "stock": 25,
     "estado": "Habilitado"
   },
   {
@@ -40,7 +40,7 @@
     "imagen": "https://images.unsplash.com/photo-1447933601403-0c6688de566e",
     "precioNormal": 5000,
     "precioConIva": 5650,
-    "stock": 25,
+    "stock": 24,
     "estado": "Habilitado"
   }
 ]
