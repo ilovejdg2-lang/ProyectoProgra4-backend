@@ -18,6 +18,8 @@ builder.Services.AddSingleton<proyecto_cafe_una_backend.Services.ProductosServic
 builder.Services.AddSingleton<proyecto_cafe_una_backend.Services.UsuariosService>();
 builder.Services.AddSingleton<proyecto_cafe_una_backend.Services.InformacionService>();
 builder.Services.AddSingleton<proyecto_cafe_una_backend.Services.VoluntariadoService>();
+builder.Services.AddSingleton<proyecto_cafe_una_backend.Services.AuthService>();
+
 
 var app = builder.Build();
 
