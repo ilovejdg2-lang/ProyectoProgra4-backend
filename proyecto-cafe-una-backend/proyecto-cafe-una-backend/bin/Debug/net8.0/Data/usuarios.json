@@ -16,7 +16,7 @@
     "passwordHash": "nose1234",
     "estado": "activo",
     "roles": [
-      "Admin"
+      "Usuario"
     ]
   },
   {
@@ -24,6 +24,16 @@
     "nombre": "Fati",
     "correo": "fatima.carrillo@est.una.ac.cr",
     "passwordHash": "F1t32105",
+    "estado": "activo",
+    "roles": [
+      "SuperAdmin"
+    ]
+  },
+  {
+    "id": 4,
+    "nombre": "yeisson",
+    "correo": "yeissonalberto14@gmail.com",
+    "passwordHash": "1234",
     "estado": "activo",
     "roles": [
       "SuperAdmin"
