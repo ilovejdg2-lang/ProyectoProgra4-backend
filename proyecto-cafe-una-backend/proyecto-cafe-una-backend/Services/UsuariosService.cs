@@ -23,6 +23,28 @@ public class UsuariosService
         return usuarios.FirstOrDefault(u => u.Id == id);
     }
 
+    public async Task<Usuario?> ObtenerPorCorreoAsync(string correo)
+    {
+        var usuarios = await ObtenerTodosAsync();
+        return usuarios.FirstOrDefault(u => u.Correo.Equals(correo.Trim(), StringComparison.OrdinalIgnoreCase));
+    }
+
+    public async Task<Usuario?> ObtenerPorNombreOCorreoAsync(string identifier)
+    {
+        var normalized = identifier.Trim().ToLowerInvariant();
+        var usuarios = await ObtenerTodosAsync();
+        return usuarios.FirstOrDefault(u =>
+            u.Correo.ToLowerInvariant() == normalized ||
+            u.Nombre.ToLowerInvariant() == normalized
+        );
+    }
+
+    public async Task<bool> ExisteCorreoAsync(string correo)
+    {
+        var usuario = await ObtenerPorCorreoAsync(correo);
+        return usuario is not null;
+    }
+
     public async Task<Usuario> CrearAsync(Usuario nuevoUsuario)
     {
         var usuarios = await ObtenerTodosAsync();
@@ -83,6 +105,22 @@ public class UsuariosService
             : forzarEstado;
 
         actual.Estado = nuevoEstado;
+        usuarios[index] = actual;
+        await _store.WriteAsync(usuarios);
+        return actual;
+    }
+
+    public async Task<Usuario?> ActualizarPasswordPorCorreoAsync(string correo, string nuevaPassword)
+    {
+        var usuarios = await ObtenerTodosAsync();
+        var index = usuarios.FindIndex(u => u.Correo.Equals(correo.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (index < 0)
+        {
+            return null;
+        }
+
+        var actual = usuarios[index];
+        actual.PasswordHash = nuevaPassword;
         usuarios[index] = actual;
         await _store.WriteAsync(usuarios);
         return actual;

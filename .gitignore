@@ -1,0 +1,44 @@
+**/bin/
+**/obj/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build, test, publish artifacts
+**/[Dd]ebug/
+**/[Rr]elease/
+**/TestResults/
+**/publish/
+**/artifacts/
+*.nupkg
+*.snupkg
+
+# .NET caches and generated files
+*.cache
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.dbmdl
+Generated\ Files/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+appsettings.Local.json
+appsettings.*.local.json
+secrets.json
+
+# OS / misc
+Thumbs.db
+Desktop.ini
+*.log
+*.tmp
+*.temp

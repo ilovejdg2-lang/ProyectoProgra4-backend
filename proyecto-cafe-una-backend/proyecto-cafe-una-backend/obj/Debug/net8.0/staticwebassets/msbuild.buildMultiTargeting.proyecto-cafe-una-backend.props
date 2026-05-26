@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\proyecto-cafe-una-backend.props" />
-</Project>

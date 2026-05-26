@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\proyecto-cafe-una-backend.props" />
-</Project>
