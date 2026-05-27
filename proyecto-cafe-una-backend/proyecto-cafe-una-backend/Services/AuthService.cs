@@ -1,8 +1,10 @@
 using proyecto_cafe_una_backend.Models;
+using System.Net;
+using System.Net.Mail;
 
 namespace proyecto_cafe_una_backend.Services;
 
-public class AuthService(UsuariosService usuariosService, IWebHostEnvironment environment)
+public class AuthService(UsuariosService usuariosService, IWebHostEnvironment environment, IConfiguration configuration)
 {
     private readonly JsonFileStore _resetStore = new("password_resets.json");
     private readonly TimeSpan _tokenLifetime = TimeSpan.FromMinutes(30);
@@ -77,11 +79,12 @@ public class AuthService(UsuariosService usuariosService, IWebHostEnvironment en
 
         await _resetStore.WriteAsync(entries);
 
-        // En producción esto debe enviarse por correo SMTP.
+        var emailEnviado = await EnviarCorreoRecuperacionAsync(usuario.Correo, usuario.Nombre, token);
         return new ForgotPasswordResult
         {
             UsuarioEncontrado = true,
-            DevToken = environment.IsDevelopment() ? token : null
+            DevToken = environment.IsDevelopment() ? token : null,
+            EmailEnviado = emailEnviado
         };
     }
 
@@ -116,5 +119,43 @@ public class AuthService(UsuariosService usuariosService, IWebHostEnvironment en
         entry.Usado = true;
         await _resetStore.WriteAsync(entries);
         return true;
+    }
+
+    private async Task<bool> EnviarCorreoRecuperacionAsync(string destinatario, string nombre, string token)
+    {
+        var settings = configuration.GetSection("Smtp").Get<SmtpSettings>();
+        if (settings is null || string.IsNullOrWhiteSpace(settings.Host) || string.IsNullOrWhiteSpace(settings.FromEmail))
+        {
+            return false;
+        }
+
+        try
+        {
+            using var client = new SmtpClient(settings.Host, settings.Port)
+            {
+                EnableSsl = settings.EnableSsl
+            };
+
+            if (!string.IsNullOrWhiteSpace(settings.Username))
+            {
+                client.Credentials = new NetworkCredential(settings.Username, settings.Password);
+            }
+
+            using var message = new MailMessage
+            {
+                From = new MailAddress(settings.FromEmail, settings.FromName),
+                Subject = "Codigo de recuperacion de contrasena",
+                Body = $"Hola {nombre},\n\nTu codigo de recuperacion es: {token}\n\nEste codigo vence en 30 minutos.\n\nSi no solicitaste este cambio, ignora este correo.",
+                IsBodyHtml = false
+            };
+
+            message.To.Add(destinatario);
+            await client.SendMailAsync(message);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
