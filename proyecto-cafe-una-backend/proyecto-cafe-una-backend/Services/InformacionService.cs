@@ -83,7 +83,6 @@ public class InformacionService
             }
 
             actualizado = item;
-            gallery[i] = item;
             break;
         }
 

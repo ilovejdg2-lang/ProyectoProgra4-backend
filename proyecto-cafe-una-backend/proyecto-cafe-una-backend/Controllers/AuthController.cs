@@ -46,8 +46,11 @@ public class AuthController(AuthService authService) : ControllerBase
         return Ok(new
         {
             found = true,
-            message = "Se envió el código de recuperación.",
-            devToken = result.DevToken
+            message = result.EmailEnviado
+                ? "Se envio el codigo de recuperacion al correo registrado."
+                : "Se genero el codigo de recuperacion.",
+            devToken = result.DevToken,
+            emailSent = result.EmailEnviado
         });
     }
 
