@@ -8,7 +8,13 @@ public class InformacionService
 
     public async Task<JsonObject> ObtenerInformacionAsync()
     {
-        return await _store.ReadAsync(DefaultInformacion);
+        var info = await _store.ReadAsync(DefaultInformacion);
+        if (CompletarEstructura(info))
+        {
+            await _store.WriteAsync(info);
+        }
+
+        return info;
     }
 
     public async Task<JsonNode?> ObtenerSeccionAsync(string seccion)
@@ -133,6 +139,11 @@ public class InformacionService
                 ["buttonText"] = "Conocer mas",
                 ["backgroundImage"] = string.Empty
             },
+            ["historia"] = new JsonObject
+            {
+                ["title"] = "Nuestra historia",
+                ["description"] = "Nacimos para impulsar la cultura cafetalera con identidad universitaria, trabajo colaborativo y desarrollo sostenible."
+            },
             ["mission"] = new JsonObject
             {
                 ["title"] = "Mision",
@@ -143,7 +154,83 @@ public class InformacionService
                 ["title"] = "Vision",
                 ["description"] = "Ser referencia en cafe sostenible y colaboracion comunitaria."
             },
-            ["gallery"] = new JsonArray()
+            ["gallery"] = DefaultGallery()
         };
+    }
+
+    private static JsonArray DefaultGallery()
+    {
+        return new JsonArray
+        {
+            new JsonObject
+            {
+                ["id"] = 1,
+                ["title"] = "Latte art",
+                ["image"] = "https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=800&q=80"
+            },
+            new JsonObject
+            {
+                ["id"] = 2,
+                ["title"] = "Interior de cafetería",
+                ["image"] = "https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=800&q=80"
+            },
+            new JsonObject
+            {
+                ["id"] = 3,
+                ["title"] = "Granos de café",
+                ["image"] = "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80"
+            }
+        };
+    }
+
+    private static bool CompletarEstructura(JsonObject info)
+    {
+        var defaults = DefaultInformacion();
+        var updated = false;
+
+        foreach (var entry in defaults)
+        {
+            var key = entry.Key;
+            var defaultValue = entry.Value?.DeepClone();
+            var currentValue = info[key];
+
+            if (defaultValue is JsonArray)
+            {
+                if (currentValue is not JsonArray currentArray)
+                {
+                    info[key] = defaultValue;
+                    updated = true;
+                }
+                else if (currentArray.Count == 0 && key == "gallery")
+                {
+                    info[key] = defaultValue;
+                    updated = true;
+                }
+
+                continue;
+            }
+
+            if (defaultValue is JsonObject defaultObject)
+            {
+                if (currentValue is JsonObject currentObject)
+                {
+                    foreach (var prop in defaultObject)
+                    {
+                        if (currentObject[prop.Key] is null)
+                        {
+                            currentObject[prop.Key] = prop.Value?.DeepClone();
+                            updated = true;
+                        }
+                    }
+
+                    continue;
+                }
+
+                info[key] = defaultObject.DeepClone();
+                updated = true;
+            }
+        }
+
+        return updated;
     }
 }
