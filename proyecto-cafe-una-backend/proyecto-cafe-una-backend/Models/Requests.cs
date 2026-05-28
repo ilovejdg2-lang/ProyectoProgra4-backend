@@ -23,6 +23,7 @@ public class ActualizarUsuarioRequest
     public string Estado { get; set; } = string.Empty;
     public List<string> Roles { get; set; } = [];
     public int? ActorId { get; set; }
+    public List<string> ActorRoles { get; set; } = [];
 }
 
 public class ActualizarSeccionRequest
