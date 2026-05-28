@@ -36,6 +36,9 @@ appsettings.Local.json
 appsettings.*.local.json
 secrets.json
 
+# Runtime JSON data
+**/Data/
+
 # OS / misc
 Thumbs.db
 Desktop.ini
