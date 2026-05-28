@@ -19,11 +19,16 @@ public class VoluntariadoService
 
     public async Task<SolicitudVoluntariado> CrearSolicitudAsync(SolicitudVoluntariado nuevaSolicitud)
     {
+        if (string.IsNullOrWhiteSpace(nuevaSolicitud.UserId) || nuevaSolicitud.UserId.Equals("anonimo", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("La solicitud de voluntariado debe estar asociada a un usuario.");
+        }
+
         var solicitudes = await ObtenerSolicitudesAsync();
         var solicitudCompleta = new SolicitudVoluntariado
         {
-            Id = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-            UserId = string.IsNullOrWhiteSpace(nuevaSolicitud.UserId) ? "anonimo" : nuevaSolicitud.UserId,
+            Id = ObtenerSiguienteId(solicitudes),
+            UserId = nuevaSolicitud.UserId,
             FechaSolicitud = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd"),
             Estado = "Pendiente",
             Nombre = nuevaSolicitud.Nombre,
@@ -46,6 +51,12 @@ public class VoluntariadoService
         solicitudes.Add(solicitudCompleta);
         await _store.WriteAsync(solicitudes);
         return solicitudCompleta;
+    }
+
+    private static long ObtenerSiguienteId(IEnumerable<SolicitudVoluntariado> solicitudes)
+    {
+        var maxId = solicitudes.Any() ? solicitudes.Max(s => s.Id) : 0;
+        return maxId + 1;
     }
 
     public async Task<SolicitudVoluntariado?> ActualizarSolicitudAsync(long id, SolicitudVoluntariado cambios)

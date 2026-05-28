@@ -28,8 +28,15 @@ public class VoluntariadoController(VoluntariadoService voluntariadoService) : C
     [HttpPost]
     public async Task<ActionResult<SolicitudVoluntariado>> CrearSolicitud([FromBody] SolicitudVoluntariado nuevaSolicitud)
     {
-        var creada = await voluntariadoService.CrearSolicitudAsync(nuevaSolicitud);
-        return CreatedAtAction(nameof(ObtenerSolicitudes), new { id = creada.Id }, creada);
+        try
+        {
+            var creada = await voluntariadoService.CrearSolicitudAsync(nuevaSolicitud);
+            return CreatedAtAction(nameof(ObtenerSolicitudes), new { id = creada.Id }, creada);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPut("{id:long}")]
