@@ -42,9 +42,18 @@ public class UsuariosController(UsuariosService usuariosService) : ControllerBas
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<Usuario>> ActualizarUsuario(int id, [FromBody] Usuario cambios)
+    public async Task<ActionResult<Usuario>> ActualizarUsuario(int id, [FromBody] ActualizarUsuarioRequest cambios)
     {
-        var actualizado = await usuariosService.ActualizarAsync(id, cambios);
+        var payload = new Usuario
+        {
+            Nombre = cambios.Nombre,
+            Correo = cambios.Correo,
+            PasswordHash = cambios.PasswordHash,
+            Estado = cambios.Estado,
+            Roles = cambios.Roles
+        };
+
+        var actualizado = await usuariosService.ActualizarConActorAsync(id, payload, cambios.ActorId);
         if (actualizado is null)
         {
             return NotFound();
@@ -56,12 +65,19 @@ public class UsuariosController(UsuariosService usuariosService) : ControllerBas
     [HttpPatch("{id:int}/estado")]
     public async Task<ActionResult<Usuario>> ToggleEstadoUsuario(int id, [FromBody] CambiarEstadoUsuarioRequest? request)
     {
-        var actualizado = await usuariosService.ToggleEstadoAsync(id, request?.Estado);
-        if (actualizado is null)
+        try
         {
-            return NotFound();
-        }
+            var actualizado = await usuariosService.ToggleEstadoAsync(id, request?.Estado, request?.ActorId, request?.ActorRoles);
+            if (actualizado is null)
+            {
+                return NotFound();
+            }
 
-        return Ok(actualizado);
+            return Ok(actualizado);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

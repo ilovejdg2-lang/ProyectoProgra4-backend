@@ -5,6 +5,9 @@ namespace proyecto_cafe_una_backend.Services;
 public class UsuariosService
 {
     private readonly JsonFileStore _store = new("usuarios.json");
+    private const string EstadoActivo = "activo";
+    private const string EstadoInactivo = "inactivo";
+    private const string RolSuperAdmin = "SuperAdmin";
 
     public async Task<List<Usuario>> ObtenerTodosAsync()
     {
@@ -14,7 +17,7 @@ public class UsuariosService
     public async Task<List<Usuario>> ObtenerActivosAsync()
     {
         var usuarios = await ObtenerTodosAsync();
-        return usuarios.Where(u => u.Estado == "activo").ToList();
+        return usuarios.Where(u => EsActivo(u.Estado)).ToList();
     }
 
     public async Task<Usuario?> ObtenerPorIdAsync(int id)
@@ -90,7 +93,7 @@ public class UsuariosService
         return actualizado;
     }
 
-    public async Task<Usuario?> ToggleEstadoAsync(int id, string? forzarEstado = null)
+    public async Task<Usuario?> ActualizarConActorAsync(int id, Usuario cambios, int? actorId)
     {
         var usuarios = await ObtenerTodosAsync();
         var index = usuarios.FindIndex(u => u.Id == id);
@@ -100,9 +103,57 @@ public class UsuariosService
         }
 
         var actual = usuarios[index];
-        var nuevoEstado = string.IsNullOrWhiteSpace(forzarEstado)
-            ? (actual.Estado == "activo" ? "inactivo" : "activo")
-            : forzarEstado;
+        var puedeCambiarPassword = actorId.HasValue && actorId.Value == id;
+
+        var actualizado = new Usuario
+        {
+            Id = id,
+            Nombre = string.IsNullOrWhiteSpace(cambios.Nombre) ? actual.Nombre : cambios.Nombre,
+            Correo = string.IsNullOrWhiteSpace(cambios.Correo) ? actual.Correo : cambios.Correo.ToLowerInvariant(),
+            PasswordHash = string.IsNullOrWhiteSpace(cambios.PasswordHash) || !puedeCambiarPassword
+                ? actual.PasswordHash
+                : cambios.PasswordHash,
+            Estado = string.IsNullOrWhiteSpace(cambios.Estado) ? actual.Estado : cambios.Estado,
+            Roles = cambios.Roles.Count == 0 ? actual.Roles : cambios.Roles
+        };
+
+        usuarios[index] = actualizado;
+        await _store.WriteAsync(usuarios);
+        return actualizado;
+    }
+
+    public async Task<Usuario?> ToggleEstadoAsync(int id, string? forzarEstado = null, int? actorId = null, IEnumerable<string>? actorRoles = null)
+    {
+        var usuarios = await ObtenerTodosAsync();
+        var index = usuarios.FindIndex(u => u.Id == id);
+        if (index < 0)
+        {
+            return null;
+        }
+
+        if (!EsSuperAdmin(actorRoles))
+        {
+            throw new InvalidOperationException("Solo un SuperAdmin puede inactivar o activar usuarios.");
+        }
+
+        if (actorId.HasValue && actorId.Value == id)
+        {
+            throw new InvalidOperationException("No puedes cambiar tu propio estado.");
+        }
+
+        var actual = usuarios[index];
+        var estadoSolicitado = NormalizarEstado(forzarEstado);
+        if (string.Equals(estadoSolicitado, EstadoActivo, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("Solo se permite inactivar usuarios.");
+        }
+
+        if (!EsActivo(actual.Estado))
+        {
+            return actual;
+        }
+
+        var nuevoEstado = EstadoInactivo;
 
         actual.Estado = nuevoEstado;
         usuarios[index] = actual;
@@ -140,5 +191,23 @@ public class UsuariosService
                 Roles = ["SuperAdmin"]
             }
         ];
+    }
+
+    private static bool EsActivo(string? estado) =>
+        string.Equals((estado ?? string.Empty).Trim(), EstadoActivo, StringComparison.OrdinalIgnoreCase);
+
+    private static bool EsSuperAdmin(IEnumerable<string>? roles) =>
+        roles?.Any(r => string.Equals((r ?? string.Empty).Trim(), RolSuperAdmin, StringComparison.OrdinalIgnoreCase)) == true;
+
+    private static string? NormalizarEstado(string? estado)
+    {
+        if (string.IsNullOrWhiteSpace(estado))
+        {
+            return null;
+        }
+
+        return string.Equals(estado.Trim(), EstadoInactivo, StringComparison.OrdinalIgnoreCase)
+            ? EstadoInactivo
+            : EstadoActivo;
     }
 }
