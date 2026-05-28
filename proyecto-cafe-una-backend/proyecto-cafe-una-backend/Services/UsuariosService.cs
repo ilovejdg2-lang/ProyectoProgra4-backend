@@ -93,7 +93,7 @@ public class UsuariosService
         return actualizado;
     }
 
-    public async Task<Usuario?> ActualizarConActorAsync(int id, Usuario cambios, int? actorId)
+    public async Task<Usuario?> ActualizarConActorAsync(int id, Usuario cambios, int? actorId, IEnumerable<string>? actorRoles = null)
     {
         var usuarios = await ObtenerTodosAsync();
         var index = usuarios.FindIndex(u => u.Id == id);
@@ -104,17 +104,28 @@ public class UsuariosService
 
         var actual = usuarios[index];
         var puedeCambiarPassword = actorId.HasValue && actorId.Value == id;
+        var actorEsSuperAdmin = EsSuperAdmin(actorRoles);
+        var correoSolicitado = string.IsNullOrWhiteSpace(cambios.Correo) ? actual.Correo : cambios.Correo.ToLowerInvariant();
+
+        var correoDuplicado = usuarios.Any(u =>
+            u.Id != id &&
+            u.Correo.Equals(correoSolicitado, StringComparison.OrdinalIgnoreCase)
+        );
+        if (correoDuplicado)
+        {
+            throw new InvalidOperationException("Ya existe una cuenta con ese correo.");
+        }
 
         var actualizado = new Usuario
         {
             Id = id,
             Nombre = string.IsNullOrWhiteSpace(cambios.Nombre) ? actual.Nombre : cambios.Nombre,
-            Correo = string.IsNullOrWhiteSpace(cambios.Correo) ? actual.Correo : cambios.Correo.ToLowerInvariant(),
+            Correo = correoSolicitado,
             PasswordHash = string.IsNullOrWhiteSpace(cambios.PasswordHash) || !puedeCambiarPassword
                 ? actual.PasswordHash
                 : cambios.PasswordHash,
-            Estado = string.IsNullOrWhiteSpace(cambios.Estado) ? actual.Estado : cambios.Estado,
-            Roles = cambios.Roles.Count == 0 ? actual.Roles : cambios.Roles
+            Estado = actorEsSuperAdmin && !string.IsNullOrWhiteSpace(cambios.Estado) ? cambios.Estado : actual.Estado,
+            Roles = actorEsSuperAdmin && cambios.Roles.Count > 0 ? cambios.Roles : actual.Roles
         };
 
         usuarios[index] = actualizado;

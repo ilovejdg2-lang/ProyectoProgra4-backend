@@ -53,13 +53,20 @@ public class UsuariosController(UsuariosService usuariosService) : ControllerBas
             Roles = cambios.Roles
         };
 
-        var actualizado = await usuariosService.ActualizarConActorAsync(id, payload, cambios.ActorId);
-        if (actualizado is null)
+        try
         {
-            return NotFound();
-        }
+            var actualizado = await usuariosService.ActualizarConActorAsync(id, payload, cambios.ActorId, cambios.ActorRoles);
+            if (actualizado is null)
+            {
+                return NotFound();
+            }
 
-        return Ok(actualizado);
+            return Ok(actualizado);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPatch("{id:int}/estado")]
