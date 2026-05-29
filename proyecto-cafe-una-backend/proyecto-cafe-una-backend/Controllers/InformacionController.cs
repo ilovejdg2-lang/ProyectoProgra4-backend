@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc;
+using proyecto_cafe_una_backend.Models;
 using proyecto_cafe_una_backend.Services;
 
 namespace proyecto_cafe_una_backend.Controllers;
@@ -8,6 +9,9 @@ namespace proyecto_cafe_una_backend.Controllers;
 [Route("api/informacion")]
 public class InformacionController(InformacionService informacionService) : ControllerBase
 {
+    private static bool EsSuperAdmin(IEnumerable<string>? roles) =>
+        roles?.Any(rol => string.Equals(rol, "SuperAdmin", StringComparison.OrdinalIgnoreCase)) == true;
+
     [HttpGet]
     public async Task<ActionResult<JsonObject>> ObtenerInformacion()
     {
@@ -61,8 +65,13 @@ public class InformacionController(InformacionService informacionService) : Cont
     }
 
     [HttpDelete("galeria/{id:long}")]
-    public async Task<IActionResult> EliminarGaleriaItem(long id)
+    public async Task<IActionResult> EliminarGaleriaItem(long id, [FromBody] ActorRequest? request)
     {
+        if (!EsSuperAdmin(request?.ActorRoles))
+        {
+            return BadRequest(new { message = "Solo SuperAdmin puede eliminar imagenes." });
+        }
+
         var deleted = await informacionService.EliminarGaleriaItemAsync(id);
         if (!deleted)
         {

@@ -54,7 +54,7 @@ public class AuthService(UsuariosService usuariosService, IWebHostEnvironment en
         }
 
         var usuario = await usuariosService.ObtenerPorNombreOCorreoAsync(identifier);
-        if (usuario is null)
+        if (usuario is null || !string.Equals(usuario.Estado, "activo", StringComparison.OrdinalIgnoreCase))
         {
             return new ForgotPasswordResult { UsuarioEncontrado = false };
         }

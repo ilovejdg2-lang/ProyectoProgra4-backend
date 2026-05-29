@@ -8,6 +8,9 @@ namespace proyecto_cafe_una_backend.Controllers;
 [Route("api/voluntariado/solicitudes")]
 public class VoluntariadoController(VoluntariadoService voluntariadoService) : ControllerBase
 {
+    private static bool EsSuperAdmin(IEnumerable<string>? roles) =>
+        roles?.Any(rol => string.Equals(rol, "SuperAdmin", StringComparison.OrdinalIgnoreCase)) == true;
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<SolicitudVoluntariado>>> ObtenerSolicitudes()
     {
@@ -42,8 +45,13 @@ public class VoluntariadoController(VoluntariadoService voluntariadoService) : C
     }
 
     [HttpDelete("{id:long}")]
-    public async Task<IActionResult> EliminarSolicitud(long id)
+    public async Task<IActionResult> EliminarSolicitud(long id, [FromBody] ActorRequest? request)
     {
+        if (!EsSuperAdmin(request?.ActorRoles))
+        {
+            return BadRequest(new { message = "Solo SuperAdmin puede eliminar solicitudes de voluntariado." });
+        }
+
         var deleted = await voluntariadoService.EliminarSolicitudAsync(id);
         if (!deleted)
         {
